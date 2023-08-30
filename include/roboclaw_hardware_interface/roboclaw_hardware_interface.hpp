@@ -4,10 +4,13 @@
 #include "hardware_interface/system_interface.hpp"
 
 using hardware_interface::CallbackReturn;
+using hardware_interface::CommandInterface;
+using hardware_interface::HardwareInfo;
 using hardware_interface::return_type;
+using hardware_interface::StateInterface;
 using rclcpp_lifecycle::State;
 
-namespace roboclaw_ros2_control
+namespace roboclaw_hardware_interface
 {
 class RoboClawHardwareInterface : public hardware_interface::SystemInterface
 {
@@ -70,7 +73,7 @@ public:
      * \returns CallbackReturn::SUCCESS if required data are provided and can be parsed.
      * \returns CallbackReturn::ERROR if any error happens or data are missing.
      */
-    CallbackReturn on_init(const hardware_interface::HardwareInfo & hardware_info) override;
+    CallbackReturn on_init(const HardwareInfo & hardware_info) override;
 
     /// Exports all state interfaces for this hardware interface.
     /**
@@ -81,7 +84,7 @@ public:
      *
      * \return vector of state interfaces
      */
-    std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
+    std::vector<StateInterface> export_state_interfaces() override;
 
     /// Exports all command interfaces for this hardware interface.
     /**
@@ -92,7 +95,7 @@ public:
      *
      * \return vector of command interfaces
      */
-    std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
+    std::vector<CommandInterface> export_command_interfaces() override;
 
     /////////////////////////////////
     //  SYSTEM INTERFACE OVERRIDES //
