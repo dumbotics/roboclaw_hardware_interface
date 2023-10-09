@@ -30,6 +30,7 @@ include_directories(
 # Add roboclaw hardware interface shared library
 add_library(${PROJECT_NAME} SHARED
   src/roboclaw_hardware_interface.cpp
+  src/roboclaw_unit.cpp
   src/motor_joint.cpp
 )
 
