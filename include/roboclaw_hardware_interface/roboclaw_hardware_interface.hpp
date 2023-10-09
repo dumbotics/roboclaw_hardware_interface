@@ -9,7 +9,7 @@ using rclcpp_lifecycle::State;
 
 namespace roboclaw_ros2_control
 {
-class RoboClawHardwareInterface : hardware_interface::SystemInterface
+class RoboClawHardwareInterface : public hardware_interface::SystemInterface
 {
 public:
 
