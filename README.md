@@ -28,6 +28,8 @@ git clone https://github.com/dumbotics/roboclaw_hardware_interface.git
 ```
 
 2. **Install Dependencies**
+- Download and install the [roboclaw_serial library](git@github.com:dumbotics/roboclaw_serial.git). You can either download this directly to your ROS2 workspace and let colcon build it, or you can manually build and install using CMake.
+- Install all ROS2 requirements:
 ```
 rosdep install roboclaw_hardware_interface
 ```
@@ -40,7 +42,20 @@ colcon build --packages-select roboclaw_hardware_interface
 source ~/ros2_ws/install/setup.bash
 ```
 
-## Configuration
+## Hardware Configuration
+
+Prior to using this interface, the roboclaw device must be configured. Please consult the the BasicMicro user manual. Note that configuration requires installation of the Motion Studio application in a Windows environment.
+
+1. Set communication mode to packet serial
+2. calibrate velocity PID for each motor
+3. Take note of which motor is designated M1, and which is M2.
+4. If not known, determine the encoder tick counts per full joint rotation.
+   - Add a mark or piece of tape on the wheel
+   - Zero the encoder count in Motion Studio
+   - Rotate the wheel and count the number of rotations (more is better)
+   - Calculate the average ticks per wheel rotation
+
+### Software 
 
 1. **Update Robot's URDF**:
 
