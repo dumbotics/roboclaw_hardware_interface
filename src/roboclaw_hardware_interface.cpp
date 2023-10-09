@@ -47,15 +47,28 @@ CallbackReturn RoboClawHardwareInterface::on_init(const HardwareInfo & hardware_
 
 std::vector<StateInterface> RoboClawHardwareInterface::export_state_interfaces()
 {
-  StateInterface interface("left");
-  std::vector<StateInterface> interfaces;
-  interfaces.push_back(interface);
-  return interfaces;
+  std::vector<StateInterface> state_interfaces;
+  for (auto roboclaw : roboclaw_units_) {
+    for (auto & joint : roboclaw.joints) {
+      if (joint) {
+        state_interfaces.emplace_back(joint->name, "position", joint->getPositionStatePtr());
+      }
+    }
+  }
+  return state_interfaces;
 }
 
 std::vector<CommandInterface> RoboClawHardwareInterface::export_command_interfaces()
 {
-  return std::vector<CommandInterface>();
+  std::vector<CommandInterface> command_interfaces;
+  for (auto roboclaw : roboclaw_units_) {
+    for (auto & joint : roboclaw.joints) {
+      if (joint) {
+        command_interfaces.emplace_back(joint->name, "velocity", joint->getVelocityCommandPtr());
+      }
+    }
+  }
+  return command_interfaces;
 }
 
 return_type RoboClawHardwareInterface::write(
