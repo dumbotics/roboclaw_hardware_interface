@@ -6,7 +6,7 @@ The RoboClaw Hardware Interface enables seamless integration of RoboClaw motor c
 1. [Package Overview](#package-overview)
 2. [Setup & Installation](#setup--installation)
 3. [Configuration](#configuration)
-4. [Running with ROS2](#running-with-ros2)
+4. [Running with ROS2](#example)
 5. [Development & Contribution](#development--contribution)
 6. [License](#license)
 
