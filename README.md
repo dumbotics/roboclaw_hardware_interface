@@ -18,13 +18,18 @@ This package allows efficient control and monitoring of RoboClaw motor controlle
 
 ### Prerequisites
 
-A working ROS2 environment is required. If you don't have ROS2 installed, please follow the ROS2 installation guide.
+A working ROS2 environment is required. If you don't have ROS2 installed, please follow the ROS2 installation guide. Ensure that rosdep definitions are current (`rosdep update`).
 
 1. **Clone the Repository**:
 
 ```bash
-cd ~/ros2_ws/src
-git clone [repository_url] roboclaw_hardware_interface
+cd ~/ros2_ws/src # Or whatever your ros2 workspace is named
+git clone https://github.com/dumbotics/roboclaw_hardware_interface.git
+```
+
+2. **Install Dependencies**
+```
+rosdep install roboclaw_hardware_interface
 ```
 
 2. **Build & Source the Workspace**:
