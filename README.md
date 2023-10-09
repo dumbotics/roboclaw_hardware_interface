@@ -42,7 +42,9 @@ colcon build --packages-select roboclaw_hardware_interface
 source ~/ros2_ws/install/setup.bash
 ```
 
-## Hardware Configuration
+## Configuration
+
+### Hardware Configuration
 
 Prior to using this interface, the roboclaw device must be configured. Please consult the the BasicMicro user manual. Note that configuration requires installation of the Motion Studio application in a Windows environment.
 
@@ -55,19 +57,30 @@ Prior to using this interface, the roboclaw device must be configured. Please co
    - Rotate the wheel and count the number of rotations (more is better)
    - Calculate the average ticks per wheel rotation
 
-### Software 
+### Software Configuration 
+
+Hardware and joint parameters must be provide to the controller manager via a URDF configuration file.
 
 1. **Update Robot's URDF**:
 
-The `roboclaw_hardware_interface` receives hardware and software parameters via the URDF. This includes specifying the serial port, command interfaces, state interfaces, and other required parameters.
+The base controller parses hardware and software parameters from URDF and provides them to the hardware interface.
+
+An example .xacro file for a differential system with a left and right wheel is provided below:
 
 ```xml
 <ros2_control name="RoboClawSystem" type="system">
   <hardware>
     <plugin>roboclaw_hardware_interface/RoboClawHardwareInterface</plugin>
-    <param name="serial_port">/dev/ttyACM0</param>
+    <param name="serial_port">/dev/roboclaw</param>
   </hardware>
-  <joint name="joint_name">
+  <joint name="left_wheel_joint">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <param name="address">128</param>
+    <param name="qppr">500</param>
+    <param name="motor_type">M2</param>
+  </joint>
+  <joint name="right_wheel_joint">
     <command_interface name="velocity"/>
     <state_interface name="position"/>
     <param name="address">128</param>
@@ -83,16 +96,16 @@ The hardware interface will validate parameters automatically and fail to start 
 
 ### Required Parameters:
 
-- **`serial_port`**: The serial port for communication with RoboClaw, e.g., `/dev/ttyACM0`.
-- **`address`**: RoboClaw address for the joint; it should be in the range [128:136].
-- **`qppr`**: Ticks count per wheel rotation.
-- **`motor_type`**: Type of motor; it can be either "M1" or "M2".
+- **`serial_port`**: The serial port for communication with the RoboClaw configuration, e.g., `/dev/roboclaw`.
+- **`address`**: RoboClaw address for the unit associated with the joint; per the roboclaw user manual, the address be range [128:136].
+- **`qppr`**: Ticks count per wheel rotation. This can be either measured as described in the hardware configuration section, or determined by multiply the encoder count by the transmission ratio.
+- **`motor_type`**: Type of motor; it can be either "M1" or "M2". This should be determined as described in the hardware configuration section.
 
 2. **Configure Controller**:
 
 Since the hardware_interface will be executed by a controller, a onfiguration YAML for the controller manager and the controllers is required. An example for the `differential_driver_controller` is provided below:
 
-```
+```yml
 controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
