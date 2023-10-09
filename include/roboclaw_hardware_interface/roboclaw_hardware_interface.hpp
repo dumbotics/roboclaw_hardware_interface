@@ -1,7 +1,10 @@
 #ifndef ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
 #define ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
 
+#include <map>
+
 #include "hardware_interface/system_interface.hpp"
+#include "roboclaw_hardware_interface/motor_joint.hpp"
 
 using hardware_interface::CallbackReturn;
 using hardware_interface::CommandInterface;
@@ -12,6 +15,10 @@ using rclcpp_lifecycle::State;
 
 namespace roboclaw_hardware_interface
 {
+
+/// The roboclaw configuration parameters
+typedef std::map<uint8_t, std::map<std::string, MotorJoint::SharedPtr>> RoboClawConfiguration;
+
 class RoboClawHardwareInterface : public hardware_interface::SystemInterface
 {
 public:
@@ -122,6 +129,20 @@ public:
      * \return return_type::OK if the read was successful, return_type::ERROR otherwise.
      */
   return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
+
+  /// Validate and organize hardware parameters from hardware information.
+  /**
+     * The hardware info is parsed and validated, checking for parameter
+     * consistency and validity. Parameters are organized and stored in the
+     * roboclaws_ member variable as a
+     * std::map<uint8_t, std::map<std::string, std::optional<MotorConfig>>>,
+     * which maps a roboclaw address (uint8_t) to a map of optional motor
+     * configurations, the keys for which are strings, either "M1" or "M2"
+     *
+     * \param[in] hardware_info structure with data from URDF.
+     * 
+     */
+  RoboClawConfiguration parse_roboclaw_configuration(const HardwareInfo & hardware_info);
 };
 }  // namespace roboclaw_hardware_interface
 
