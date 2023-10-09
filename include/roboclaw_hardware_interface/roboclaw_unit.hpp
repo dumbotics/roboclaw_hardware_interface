@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_UNIT__HPP
-#define ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_UNIT__HPP
+#ifndef ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_UNIT_HPP_
+#define ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_UNIT_HPP_
 
 #include <map>
 #include <roboclaw_serial/command.hpp>
@@ -49,4 +49,4 @@ private:
 };
 }  // namespace roboclaw_hardware_interface
 
-#endif  // ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_UNIT__HPP
+#endif  // ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_UNIT_HPP_

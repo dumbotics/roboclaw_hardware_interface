@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#ifndef ROBOCLAW_HARDWARE_INTERFACE__MOTOR_JOINT_HPP_
+#define ROBOCLAW_HARDWARE_INTERFACE__MOTOR_JOINT_HPP_
 
 #include <math.h>
 
@@ -54,7 +55,9 @@ public:
   void setPositionState(const int32_t & encoder_count);
 
   // Accessor methods to enable ros2_control to access joint interface pointers
-  inline double * getPositionStatePtr() { return &position_state_; };
-  inline double * getVelocityCommandPtr() { return &velocity_command_; };
+  inline double * getPositionStatePtr() {return &position_state_;}
+  inline double * getVelocityCommandPtr() {return &velocity_command_;}
 };
 }  // namespace roboclaw_hardware_interface
+
+#endif  // ROBOCLAW_HARDWARE_INTERFACE__MOTOR_JOINT_HPP_

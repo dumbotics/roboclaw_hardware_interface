@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
-#define ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
+#ifndef ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE_HPP_
+#define ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE_HPP_
 
 #include <map>
+#include <string>
+#include <vector>
+
 #include <roboclaw_serial/interface.hpp>
 
 #include "hardware_interface/system_interface.hpp"
@@ -115,7 +118,7 @@ public:
      * configurations, the keys for which are strings, either "M1" or "M2"
      *
      * \param[in] hardware_info structure with data from URDF.
-     * 
+     *
      */
   RoboClawConfiguration parse_roboclaw_configuration(const HardwareInfo & hardware_info);
 
@@ -128,4 +131,4 @@ private:
 };
 }  // namespace roboclaw_hardware_interface
 
-#endif  //ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
+#endif  // ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE_HPP_
