@@ -15,68 +15,67 @@ namespace roboclaw_hardware_interface
 class RoboClawHardwareInterface : public hardware_interface::SystemInterface
 {
 public:
+  //////////////////
+  // CONSTRUCTORS //
+  //////////////////
 
-    //////////////////
-    // CONSTRUCTORS //
-    //////////////////
+  /// Default constructor for the hardware interface
+  RoboClawHardwareInterface() = default;
 
-    /// Default constructor for the hardware interface
-    RoboClawHardwareInterface()=default;
+  //////////////////////////////
+  // LIFECYCLE NODE OVERRIDES //
+  //////////////////////////////
 
-    //////////////////////////////
-    // LIFECYCLE NODE OVERRIDES //
-    //////////////////////////////
-
-    /// Callback function for configure transition
-    /**
+  /// Callback function for configure transition
+  /**
      * \return true by default
      */
-    CallbackReturn on_configure(const State & previous_state) override;
+  CallbackReturn on_configure(const State & previous_state) override;
 
-    /// Callback function for cleanup transition
-    /**
+  /// Callback function for cleanup transition
+  /**
      * \return true by default
      */
-    CallbackReturn on_cleanup(const State & previous_state) override;
+  CallbackReturn on_cleanup(const State & previous_state) override;
 
-    /// Callback function for shutdown transition
-    /**
+  /// Callback function for shutdown transition
+  /**
      * \return true by default
      */
-    CallbackReturn on_shutdown(const State & previous_state) override;
+  CallbackReturn on_shutdown(const State & previous_state) override;
 
-    /// Callback function for activate transition
-    /**
+  /// Callback function for activate transition
+  /**
      * \return true by default
      */
-    CallbackReturn on_activate(const State & previous_state) override;
+  CallbackReturn on_activate(const State & previous_state) override;
 
-    /// Callback function for deactivate transition
-    /**
+  /// Callback function for deactivate transition
+  /**
      * \returns true by default
      */
-    CallbackReturn on_deactivate(const State & previous_state) override;
+  CallbackReturn on_deactivate(const State & previous_state) override;
 
-    /// Callback function for erroneous transition
-    /**
+  /// Callback function for erroneous transition
+  /**
      * \returns false by default
      */
-    CallbackReturn on_error(const State & previous_state) override;
+  CallbackReturn on_error(const State & previous_state) override;
 
-    ////////////////////////////////
-    // SYSTEM INTERFACE OVERRIDES //
-    ////////////////////////////////
+  ////////////////////////////////
+  // SYSTEM INTERFACE OVERRIDES //
+  ////////////////////////////////
 
-    /// Initialization of the hardware interface from data parsed from the robot's URDF.
-    /**
+  /// Initialization of the hardware interface from data parsed from the robot's URDF.
+  /**
      * \param[in] hardware_info structure with data from URDF.
      * \returns CallbackReturn::SUCCESS if required data are provided and can be parsed.
      * \returns CallbackReturn::ERROR if any error happens or data are missing.
      */
-    CallbackReturn on_init(const HardwareInfo & hardware_info) override;
+  CallbackReturn on_init(const HardwareInfo & hardware_info) override;
 
-    /// Exports all state interfaces for this hardware interface.
-    /**
+  /// Exports all state interfaces for this hardware interface.
+  /**
      * The state interfaces have to be created and transferred according
      * to the hardware info passed in for the configuration.
      *
@@ -84,10 +83,10 @@ public:
      *
      * \return vector of state interfaces
      */
-    std::vector<StateInterface> export_state_interfaces() override;
+  std::vector<StateInterface> export_state_interfaces() override;
 
-    /// Exports all command interfaces for this hardware interface.
-    /**
+  /// Exports all command interfaces for this hardware interface.
+  /**
      * The command interfaces have to be created and transferred according
      * to the hardware info passed in for the configuration.
      *
@@ -95,14 +94,14 @@ public:
      *
      * \return vector of command interfaces
      */
-    std::vector<CommandInterface> export_command_interfaces() override;
+  std::vector<CommandInterface> export_command_interfaces() override;
 
-    /////////////////////////////////
-    //  SYSTEM INTERFACE OVERRIDES //
-    /////////////////////////////////
+  /////////////////////////////////
+  //  SYSTEM INTERFACE OVERRIDES //
+  /////////////////////////////////
 
-    /// Read the current state values from the actuator.
-    /**
+  /// Read the current state values from the actuator.
+  /**
      * The data readings from the physical hardware has to be updated
      * and reflected accordingly in the exported state interfaces.
      * That is, the data pointed by the interfaces shall be updated.
@@ -111,10 +110,10 @@ public:
      * \param[in] period The measured time taken by the last control loop iteration
      * \return return_type::OK if the read was successful, return_type::ERROR otherwise.
      */
-    return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-    /// Write the current command values to the actuator.
-    /**
+  /// Write the current command values to the actuator.
+  /**
      * The physical hardware shall be updated with the latest value from
      * the exported command interfaces.
      *
@@ -122,8 +121,8 @@ public:
      * \param[in] period The measured time taken by the last control loop iteration
      * \return return_type::OK if the read was successful, return_type::ERROR otherwise.
      */
-    return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 };
-}
+}  // namespace roboclaw_hardware_interface
 
-#endif //ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
+#endif  //ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
