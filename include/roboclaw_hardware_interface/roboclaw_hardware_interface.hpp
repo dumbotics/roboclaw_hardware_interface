@@ -11,7 +11,6 @@ using hardware_interface::CommandInterface;
 using hardware_interface::HardwareInfo;
 using hardware_interface::return_type;
 using hardware_interface::StateInterface;
-using rclcpp_lifecycle::State;
 
 namespace roboclaw_hardware_interface
 {
@@ -28,46 +27,6 @@ public:
 
   /// Default constructor for the hardware interface
   RoboClawHardwareInterface() = default;
-
-  //////////////////////////////
-  // LIFECYCLE NODE OVERRIDES //
-  //////////////////////////////
-
-  /// Callback function for configure transition
-  /**
-     * \return true by default
-     */
-  CallbackReturn on_configure(const State & previous_state) override;
-
-  /// Callback function for cleanup transition
-  /**
-     * \return true by default
-     */
-  CallbackReturn on_cleanup(const State & previous_state) override;
-
-  /// Callback function for shutdown transition
-  /**
-     * \return true by default
-     */
-  CallbackReturn on_shutdown(const State & previous_state) override;
-
-  /// Callback function for activate transition
-  /**
-     * \return true by default
-     */
-  CallbackReturn on_activate(const State & previous_state) override;
-
-  /// Callback function for deactivate transition
-  /**
-     * \returns true by default
-     */
-  CallbackReturn on_deactivate(const State & previous_state) override;
-
-  /// Callback function for erroneous transition
-  /**
-     * \returns false by default
-     */
-  CallbackReturn on_error(const State & previous_state) override;
 
   ////////////////////////////////
   // SYSTEM INTERFACE OVERRIDES //

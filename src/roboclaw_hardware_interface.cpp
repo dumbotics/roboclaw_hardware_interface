@@ -5,36 +5,6 @@
 namespace roboclaw_hardware_interface
 {
 
-CallbackReturn RoboClawHardwareInterface::on_configure(const State & previous_state)
-{
-  return CallbackReturn::SUCCESS;
-}
-
-CallbackReturn RoboClawHardwareInterface::on_cleanup(const State & previous_state)
-{
-  return CallbackReturn::SUCCESS;
-}
-
-CallbackReturn RoboClawHardwareInterface::on_shutdown(const State & previous_state)
-{
-  return CallbackReturn::SUCCESS;
-}
-
-CallbackReturn RoboClawHardwareInterface::on_activate(const State & previous_state)
-{
-  return CallbackReturn::SUCCESS;
-}
-
-CallbackReturn RoboClawHardwareInterface::on_deactivate(const State & previous_state)
-{
-  return CallbackReturn::SUCCESS;
-}
-
-CallbackReturn RoboClawHardwareInterface::on_error(const State & previous_state)
-{
-  return CallbackReturn::SUCCESS;
-}
-
 CallbackReturn RoboClawHardwareInterface::on_init(const HardwareInfo & hardware_info)
 {
   return CallbackReturn::SUCCESS;
