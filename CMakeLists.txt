@@ -27,7 +27,10 @@ include_directories(
 )
 
 # Add roboclaw hardware interface shared library
-add_library(${PROJECT_NAME} SHARED src/roboclaw_hardware_interface.cpp)
+add_library(${PROJECT_NAME} SHARED
+  src/roboclaw_hardware_interface.cpp
+  src/motor_joint.cpp
+)
 
 # Add library dependencies
 ament_target_dependencies(${PROJECT_NAME} pluginlib hardware_interface)
