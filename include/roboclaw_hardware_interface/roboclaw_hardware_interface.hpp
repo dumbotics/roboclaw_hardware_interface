@@ -2,9 +2,11 @@
 #define ROBOCLAW_HARDWARE_INTERFACE__ROBOCLAW_HARDWARE_INTERFACE__HPP
 
 #include <map>
+#include <roboclaw_serial/interface.hpp>
 
 #include "hardware_interface/system_interface.hpp"
 #include "roboclaw_hardware_interface/motor_joint.hpp"
+#include "roboclaw_hardware_interface/roboclaw_unit.hpp"
 
 using hardware_interface::CallbackReturn;
 using hardware_interface::CommandInterface;
@@ -102,6 +104,13 @@ public:
      * 
      */
   RoboClawConfiguration parse_roboclaw_configuration(const HardwareInfo & hardware_info);
+
+private:
+  /// Shared pointer to the RoboClaw driver interface
+  roboclaw_serial::Interface::SharedPtr interface_;
+
+  /// Vector of uniqely addressable roboclaw units
+  std::vector<RoboClawUnit> roboclaw_units_;
 };
 }  // namespace roboclaw_hardware_interface
 

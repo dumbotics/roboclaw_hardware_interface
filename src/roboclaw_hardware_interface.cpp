@@ -1,12 +1,47 @@
 #include "roboclaw_hardware_interface/roboclaw_hardware_interface.hpp"
 
 #include <iostream>
+#include <roboclaw_serial/device.hpp>
 
 namespace roboclaw_hardware_interface
 {
 
 CallbackReturn RoboClawHardwareInterface::on_init(const HardwareInfo & hardware_info)
 {
+  // Validate serial port parameter
+  std::string serial_port;
+  try {
+    serial_port = hardware_info.hardware_parameters.at("serial_port");
+  } catch (const std::out_of_range &) {
+    std::cerr << "Serial port must be defined as a hardware parameters." << std::endl;
+    return CallbackReturn::ERROR;
+  }
+
+  // Try to establish a connection to the roboclaw
+  try {
+    // Read the serial port from hardware parameters
+    auto device = std::make_shared<roboclaw_serial::SerialDevice>(serial_port);
+    interface_ = std::make_shared<roboclaw_serial::Interface>(device);
+  } catch (const std::exception & e) {
+    std::cerr << e.what() << std::endl;
+    return CallbackReturn::FAILURE;
+  }
+
+  // Validate parameters describing roboclaw joint configurations
+  RoboClawConfiguration config;
+  try {
+    config = parse_roboclaw_configuration(hardware_info);
+  } catch (const std::runtime_error & e) {
+    std::cerr << e.what() << std::endl;
+    return CallbackReturn::ERROR;
+  }
+
+  // Initialize each roboclaw unit from validated configuration
+  for (auto & [roboclaw_address, joints] : config) {
+    roboclaw_units_.push_back(
+      RoboClawUnit(interface_, roboclaw_address, joints["M1"], joints["M2"]));
+  }
+
   return CallbackReturn::SUCCESS;
 }
 
