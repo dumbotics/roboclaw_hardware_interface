@@ -59,7 +59,7 @@ Prior to using this interface, the roboclaw device must be configured. Please co
 
 1. **Update Robot's URDF**:
 
-Your robot's URDF must contain configurations for the RoboClaw Hardware Interface. This includes specifying the serial port, command interfaces, state interfaces, and other essential parameters.
+The `roboclaw_hardware_interface` receives hardware and software parameters via the URDF. This includes specifying the serial port, command interfaces, state interfaces, and other required parameters.
 
 ```xml
 <ros2_control name="RoboClawSystem" type="system">
@@ -79,7 +79,9 @@ Your robot's URDF must contain configurations for the RoboClaw Hardware Interfac
 </ros2_control>
 ```
 
-### Essential Parameters:
+The hardware interface will validate parameters automatically and fail to start if required parameters are not present or incorrectly-formatted.
+
+### Required Parameters:
 
 - **`serial_port`**: The serial port for communication with RoboClaw, e.g., `/dev/ttyACM0`.
 - **`address`**: RoboClaw address for the joint; it should be in the range [128:136].
@@ -88,15 +90,68 @@ Your robot's URDF must contain configurations for the RoboClaw Hardware Interfac
 
 2. **Configure Controller**:
 
-Prepare a configuration YAML for the controller manager and controllers. This YAML will detail the type of controllers, their names, and other relevant parameters.
+Since the hardware_interface will be executed by a controller, a onfiguration YAML for the controller manager and the controllers is required. An example for the `differential_driver_controller` is provided below:
 
-## Running with ROS2
+```
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
 
-After completing the setup and configuration:
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
 
-1. Start the Controller Manager with the RoboClaw Hardware Interface.
-2. Enable the required controllers.
-3. Dispatch commands through ROS2 tools or your application.
+    diffbot_base_controller:
+      type: diff_drive_controller/DiffDriveController
+
+diffbot_base_controller:
+  ros__parameters:
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+
+    # These are the nominal odometry parameters for the differential drive robot
+    wheel_separation: 0.35  # The distance between the wheels
+    wheel_radius: 0.095  # The radius of each wheel
+
+    # Corrections to nominal odometry parameters
+    # (e.g., if the left wheel has a different radius than the right wheel)
+    # Consider generating these corrections from a calibration process
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    publish_rate: 100.0
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+
+    open_loop: false  # Calculate odometry (instead of integrating velocity commands)
+    enable_odom_tf: true  # Publish odometry transform from odom_frame_id to base_frame_id
+
+    # If the controller doesn't get a velocity request within this time period, stop.
+    # This should be larger than the twist publisher's period
+    cmd_vel_timeout: 0.1
+    #publish_limited_velocity: true
+    use_stamped_vel: false
+    #velocity_rolling_window_size: 10
+
+    # Velocity and acceleration limits
+    # Whenever a min_* is unspecified, default to -max_*
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -0.4
+    linear.x.max_acceleration: 1.0
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.has_jerk_limits: false
+    angular.z.max_velocity: 1.0
+    angular.z.max_acceleration: 1.0
+
+```
+
+## Example
+
+A demo bringup package is provided by [dumbot_bringup](https://github.com/dumbotics/dumbot_bringup). This includes example xacro, configuration, and launch files running the roboclaw with the differential drive controller.
 
 ## Development & Contribution
 
@@ -104,17 +159,13 @@ After completing the setup and configuration:
   ```bash
   colcon test --packages-select roboclaw_hardware_interface
   ```
-
+<!--
 - **Documentation**: To generate package documentation, make sure Doxygen is installed and run:
   ```bash
   cd ~/ros2_ws/src/roboclaw_hardware_interface
   doxygen Doxyfile
   ```
-
-For Python scripts or packages:
-```bash
-python setup.py develop
-```
+-->
 
 ## License
 
