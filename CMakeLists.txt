@@ -42,6 +42,19 @@ ament_target_dependencies(${PROJECT_NAME}
   roboclaw_serial
 )
 
+# Install the shared library
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+# Install the plugin description xml file
+install(FILES
+  roboclaw_hardware_interface.xml
+  DESTINATION share/${PROJECT_NAME}
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
