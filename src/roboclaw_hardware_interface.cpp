@@ -71,15 +71,19 @@ std::vector<CommandInterface> RoboClawHardwareInterface::export_command_interfac
   return command_interfaces;
 }
 
-return_type RoboClawHardwareInterface::write(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+return_type RoboClawHardwareInterface::write(const rclcpp::Time &, const rclcpp::Duration &)
 {
+  for (auto & roboclaw : roboclaw_units_) {
+    roboclaw.write();
+  }
   return return_type::OK;
 }
 
-return_type RoboClawHardwareInterface::read(
-  const rclcpp::Time & time, const rclcpp::Duration & period)
+return_type RoboClawHardwareInterface::read(const rclcpp::Time &, const rclcpp::Duration &)
 {
+  for (auto & roboclaw : roboclaw_units_) {
+    roboclaw.read();
+  }
   return return_type::OK;
 }
 
