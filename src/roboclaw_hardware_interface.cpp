@@ -112,15 +112,15 @@ RoboClawConfiguration RoboClawHardwareInterface::parse_roboclaw_configuration(
     // We currently only support velocity command interfaces
     if (joint.command_interfaces.size() != 1 || joint.command_interfaces[0].name != "velocity") {
       throw std::runtime_error(
-        "Invalid command interface for " + joint.name +
-        ". Only velocity command interfaces are supported.");
+              "Invalid command interface for " + joint.name +
+              ". Only velocity command interfaces are supported.");
     }
 
     // We currently only support position state interfaces
     if (joint.state_interfaces.size() != 1 || joint.state_interfaces[0].name != "position") {
       throw std::runtime_error(
-        "Invalid state interface for " + joint.name +
-        ". Only position state interfaces are supported.");
+              "Invalid state interface for " + joint.name +
+              ". Only position state interfaces are supported.");
     }
 
     // Capture and validate parameters
@@ -155,13 +155,14 @@ RoboClawConfiguration RoboClawHardwareInterface::parse_roboclaw_configuration(
       motor_type = joint.parameters.at("motor_type");
     } catch (const std::out_of_range &) {
       throw std::runtime_error(
-        "Motor type not set for " + joint.name + ". It must be either M1 or M2.");
+              "Motor type not set for " + joint.name + ". It must be either M1 or M2.");
     }
 
     // Ensure that the motor type is valid
     if (motor_type != "M1" && motor_type != "M2") {
       throw std::runtime_error(
-        "Motor type for " + joint.name + " must be either M1 or M2 (" + motor_type + " provided).");
+              "Motor type for " + joint.name + " must be either M1 or M2 (" + motor_type +
+              " provided).");
     }
 
     // Ensure that a key exists for this address, otherwise initialize default values
@@ -176,7 +177,7 @@ RoboClawConfiguration RoboClawHardwareInterface::parse_roboclaw_configuration(
         std::make_shared<MotorJoint>(joint.name, qppr);
     } else {
       throw std::runtime_error(
-        "Bad motor type " + motor_type + " specified for joint " + joint.name);
+              "Bad motor type " + motor_type + " specified for joint " + joint.name);
     }
   }
 
