@@ -1,0 +1,63 @@
+name: ROS 2 CI with Docker
+
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: ros:humble
+
+    steps:
+
+    - name: Setup directory structure
+      run: |
+        mkdir -p workspace/src
+
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        path: workspace/src/roboclaw_hardware_interface
+
+    - name: Check out roboclaw_serial repository
+      uses: actions/checkout@v2
+      with:
+        repository: dumbotics/roboclaw_serial
+        path: workspace/src/roboclaw_serial
+
+    - name: Print workspace source
+      run: |
+        echo "Workspace source:"
+        ls -alh workspace/src
+        echo "roboclaw_serial:"
+        ls -alh workspace/src/roboclaw_serial
+        echo "roboclaw_hardware_interface:"
+        ls -alh workspace/src/roboclaw_hardware_interface
+
+    - name: Install dependencies
+      run: |
+        cd workspace
+        . /opt/ros/humble/setup.sh
+        sudo apt update -qq
+        rosdep update
+        rosdep install --from-paths src --ignore-src -y
+
+    - name: Build ROS 2 package
+      run: |
+        cd workspace
+        . /opt/ros/humble/setup.sh
+        colcon build --symlink-install
+
+    - name: Run tests
+      run: |
+        cd workspace
+        . /opt/ros/humble/setup.sh
+        . install/setup.sh
+        colcon test
+
+    - name: Assert tests passed
+      run: |
+        cd workspace
+        . /opt/ros/humble/setup.sh
+        . install/setup.sh
+        colcon test-result --verbose || (echo "Tests failed!" && exit 1)
