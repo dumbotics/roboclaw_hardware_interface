@@ -1,5 +1,7 @@
 # RoboClaw Hardware Interface for ROS2 Control
 
+[![ROS 2 CI with Docker](https://github.com/dumbotics/roboclaw_hardware_interface/actions/workflows/ros2-build-test.yml/badge.svg?branch=main)](https://github.com/dumbotics/roboclaw_hardware_interface/actions/workflows/ros2-build-test.yml)
+
 The RoboClaw Hardware Interface enables seamless integration of RoboClaw motor controllers into ROS2 robotic systems through the `ros2_control` framework.
 
 ## Table of Contents
