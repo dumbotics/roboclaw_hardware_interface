@@ -4,6 +4,8 @@
 
 The RoboClaw Hardware Interface enables seamless integration of RoboClaw motor controllers into ROS2 robotic systems through the `ros2_control` framework.
 
+This packages has only been tested with ROS2 humble.
+
 ## Table of Contents
 1. [Package Overview](#package-overview)
 2. [Setup & Installation](#setup--installation)
@@ -33,13 +35,13 @@ git clone https://github.com/dumbotics/roboclaw_hardware_interface.git
 - Download and install the [roboclaw_serial library](https://github.com/dumbotics/roboclaw_serial). You can either download this directly to your ROS2 workspace and let colcon build it, or you can manually build and install using CMake.
 - Install all ROS2 requirements:
 ```
-rosdep install roboclaw_hardware_interface
+cd ~/ros2_ws
+rosdep install --from-paths src -y --ignore-src
 ```
 
 2. **Build & Source the Workspace**:
 
 ```bash
-cd ~/ros2_ws
 colcon build --packages-select roboclaw_hardware_interface
 source ~/ros2_ws/install/setup.bash
 ```
