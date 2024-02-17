@@ -20,7 +20,7 @@
 namespace roboclaw_hardware_interface
 {
 
-CallbackReturn RoboClawHardwareInterface::on_init(const HardwareInfo & hardware_info)
+CallbackReturn RoboClawHardwareInterface::configure(const HardwareInfo & hardware_info)
 {
   // Validate serial port parameter
   std::string serial_port;
@@ -38,7 +38,7 @@ CallbackReturn RoboClawHardwareInterface::on_init(const HardwareInfo & hardware_
     interface_ = std::make_shared<roboclaw_serial::Interface>(device);
   } catch (const std::exception & e) {
     std::cerr << e.what() << std::endl;
-    return CallbackReturn::FAILURE;
+    return CallbackReturn::ERROR;
   }
 
   // Validate parameters describing roboclaw joint configurations
@@ -56,7 +56,7 @@ CallbackReturn RoboClawHardwareInterface::on_init(const HardwareInfo & hardware_
       RoboClawUnit(interface_, roboclaw_address, joints["M1"], joints["M2"]));
   }
 
-  return CallbackReturn::SUCCESS;
+  return CallbackReturn::OK;
 }
 
 std::vector<StateInterface> RoboClawHardwareInterface::export_state_interfaces()
@@ -85,7 +85,7 @@ std::vector<CommandInterface> RoboClawHardwareInterface::export_command_interfac
   return command_interfaces;
 }
 
-return_type RoboClawHardwareInterface::write(const rclcpp::Time &, const rclcpp::Duration &)
+return_type RoboClawHardwareInterface::write()
 {
   for (auto & roboclaw : roboclaw_units_) {
     roboclaw.write();
@@ -93,7 +93,7 @@ return_type RoboClawHardwareInterface::write(const rclcpp::Time &, const rclcpp:
   return return_type::OK;
 }
 
-return_type RoboClawHardwareInterface::read(const rclcpp::Time &, const rclcpp::Duration &)
+return_type RoboClawHardwareInterface::read()
 {
   for (auto & roboclaw : roboclaw_units_) {
     roboclaw.read();

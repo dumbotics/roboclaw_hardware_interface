@@ -25,11 +25,13 @@
 #include "roboclaw_hardware_interface/motor_joint.hpp"
 #include "roboclaw_hardware_interface/roboclaw_unit.hpp"
 
-using hardware_interface::CallbackReturn;
+typedef hardware_interface::return_type CallbackReturn;
+
 using hardware_interface::CommandInterface;
 using hardware_interface::HardwareInfo;
 using hardware_interface::return_type;
 using hardware_interface::StateInterface;
+using hardware_interface::status;
 
 namespace roboclaw_hardware_interface
 {
@@ -57,7 +59,7 @@ public:
      * \returns CallbackReturn::SUCCESS if required data are provided and can be parsed.
      * \returns CallbackReturn::ERROR if any error happens or data are missing.
      */
-  CallbackReturn on_init(const HardwareInfo & hardware_info) override;
+  CallbackReturn configure(const HardwareInfo & hardware_info) override;
 
   /// Exports all state interfaces for this hardware interface.
   /**
@@ -85,6 +87,30 @@ public:
   //  SYSTEM INTERFACE OVERRIDES //
   /////////////////////////////////
 
+    /// Start exchange data with the hardware.
+  /**
+   * \return return_type:OK if everything worked as expected, return_type::ERROR otherwise.
+   */
+  return_type start() override {return return_type::OK;}
+
+  /// Stop exchange data with the hardware.
+  /**
+   * \return return_type:OK if everything worked as expected, return_type::ERROR otherwise.
+   */
+  inline return_type stop() override {return return_type::OK;}
+
+  /// Get name of the system hardware.
+  /**
+   * \return name.
+   */
+  inline std::string get_name() const override {return "RoboClaw";}
+
+  /// Get current state of the system hardware.
+  /**
+   * \return current status.
+   */
+  inline status get_status() const override {return status::UNKNOWN;}
+
   /// Read the current state values from the actuator.
   /**
      * The data readings from the physical hardware has to be updated
@@ -95,7 +121,7 @@ public:
      * \param[in] period The measured time taken by the last control loop iteration
      * \return return_type::OK if the read was successful, return_type::ERROR otherwise.
      */
-  return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  return_type read() override;
 
   /// Write the current command values to the actuator.
   /**
@@ -106,7 +132,7 @@ public:
      * \param[in] period The measured time taken by the last control loop iteration
      * \return return_type::OK if the read was successful, return_type::ERROR otherwise.
      */
-  return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
+  return_type write() override;
 
   /// Validate and organize hardware parameters from hardware information.
   /**
