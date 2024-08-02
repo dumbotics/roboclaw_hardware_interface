@@ -34,24 +34,55 @@ RoboClawUnit::RoboClawUnit(
   // Set motor joint configurations
   joints[0] = m1;
   joints[1] = m2;
+
+  // Read min/max main voltage cutoffs directly from roboclaw unit
+  interface_->read(main_voltage_cutoff_request_, address_);
+  const auto & [min_cutoff, max_cutoff] = main_voltage_cutoff_request_.fields;
+
+  // Cutoffs are provided in 0.1V increments
+  main_voltage_cutoff_min_ = 0.1 * static_cast<double>(min_cutoff);
+  main_voltage_cutoff_max_ = 0.1 * static_cast<double>(max_cutoff);
+
+  std::cout << "Min Cutoff: " << main_voltage_cutoff_min_ << std::endl;
+  std::cout << "Max Cutoff: " << main_voltage_cutoff_max_ << std::endl;
 }
 
 // Read the encoder counts from the roboclaw and update position state
 void RoboClawUnit::read()
 {
   // Read and update position
-  interface_->read(encoder_state_, address_);
+  interface_->read(encoder_request_, address_);
 
   // Get constant references to fields in the encoder counts message
-  const auto & [m1_ticks, m2_ticks] = encoder_state_.fields;
+  const auto & [m1_ticks, m2_ticks] = encoder_request_.fields;
+
+  interface_->read(current_request_, address_);
+
+  // Get constant references to motor currents
+  const auto & [m1_current, m2_current] = current_request_.fields;
 
   // Convert tick counts to position states for each field if the corresponding joint exists
   if (joints[0]) {
     joints[0]->setPositionState(m1_ticks);
+    joints[0]->setEffortState(m1_current);
   }
   if (joints[1]) {
     joints[1]->setPositionState(m2_ticks);
+    joints[1]->setEffortState(m2_current);
   }
+
+  // Read and process main voltage
+  interface_->read(main_voltage_request_, address_);
+  const auto & [voltage] = main_voltage_request_.fields;
+  main_voltage_state_ = static_cast<double>(voltage) / 10.0;
+
+  // Process battery percent
+  main_voltage_percent_ = (main_voltage_state_ - main_voltage_cutoff_min_) / (main_voltage_cutoff_max_ - main_voltage_cutoff_min_);
+
+  // Read and process temperature
+  interface_->read(temperature_request_, address_);
+  const auto & [temp] = temperature_request_.fields;
+  temperature_state_ = static_cast<double>(temp) / 10.0;
 }
 
 // Write the tick rate request to the roboclaw and update

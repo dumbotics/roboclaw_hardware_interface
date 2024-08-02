@@ -15,12 +15,15 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(hardware_interface REQUIRED)
+find_package(controller_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(roboclaw_serial REQUIRED)
+find_package(realtime_tools REQUIRED)
 
 pluginlib_export_plugin_description_file(hardware_interface roboclaw_hardware_interface.xml)
+pluginlib_export_plugin_description_file(controller_interface roboclaw_broadcaster.xml)
 
 # Include directories
 include_directories(
@@ -49,8 +52,30 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION bin
 )
 
+# Add roboclaw hardware interface shared library
+add_library(roboclaw_broadcaster SHARED
+  src/roboclaw_broadcaster.cpp
+)
+
+# target_link_libraries(roboclaw_broadcaster)
+
+# Add library dependencies
+ament_target_dependencies(roboclaw_broadcaster
+  pluginlib
+  controller_interface
+  realtime_tools
+)
+
+# Install the shared library
+install(TARGETS roboclaw_broadcaster
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 # Install the plugin description xml file
 install(FILES
+  roboclaw_broadcaster.xml
   roboclaw_hardware_interface.xml
   DESTINATION share/${PROJECT_NAME}
 )

@@ -17,8 +17,8 @@
 namespace roboclaw_hardware_interface
 {
 
-MotorJoint::MotorJoint(const std::string joint_name, const int32_t qppr)
-: ticks_per_radian_(static_cast<double>(qppr) * 0.5 * M_1_PI), name(joint_name)
+MotorJoint::MotorJoint(const std::string joint_name, const int32_t qppr, const double motor_constant)
+: ticks_per_radian_(static_cast<double>(qppr) * 0.5 * M_1_PI), name(joint_name), motor_constant_(motor_constant)
 {
 }
 
@@ -40,4 +40,12 @@ void MotorJoint::setPositionState(const int32_t & encoder_count)
   // Store the prior encoder count for next time
   prior_encoder_count_ = encoder_count;
 }
+
+// Set the effort given the current and motor constant
+void MotorJoint::setEffortState(const int16_t & current)
+{
+  // Values is provide in 1/10 mA. Divide by 100 to get A
+  effort_ = 0.01 * motor_constant_ * static_cast<double>(current);
+}
+
 }  // namespace roboclaw_hardware_interface

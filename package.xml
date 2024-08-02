@@ -9,10 +9,13 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>controller_interface</depend>
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
+  <depend>realtime_tools</depend>
+  <depend>sensor_msgs</depend>
   <build_depend>roboclaw_serial</build_depend>
 
   <test_depend>ament_lint_auto</test_depend>

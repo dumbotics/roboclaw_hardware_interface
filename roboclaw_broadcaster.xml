@@ -1,0 +1,9 @@
+<library path="roboclaw_broadcaster">
+  <class name="roboclaw_broadcaster/RoboClawBroadcaster"
+         type="roboclaw_broadcaster::RoboClawBroadcaster"
+         base_class_type="controller_interface::ControllerInterface">
+    <description>
+      BasicMicro RoboClaw broadcaster for ros2_control.
+    </description>
+  </class>
+</library>

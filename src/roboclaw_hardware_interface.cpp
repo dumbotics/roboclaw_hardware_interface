@@ -62,13 +62,22 @@ CallbackReturn RoboClawHardwareInterface::on_init(const HardwareInfo & hardware_
 std::vector<StateInterface> RoboClawHardwareInterface::export_state_interfaces()
 {
   std::vector<StateInterface> state_interfaces;
-  for (auto roboclaw : roboclaw_units_) {
+  for (auto & roboclaw : roboclaw_units_) {
     for (auto & joint : roboclaw.joints) {
       if (joint) {
         state_interfaces.emplace_back(joint->name, "position", joint->getPositionStatePtr());
+        state_interfaces.emplace_back(joint->name, "effort", joint->getEffortStatePtr());
       }
     }
+
+    // Add gpio state interfaces
+    // TODO: This will break if there are multiple roboclaws. Assume 1 for now.
+    // TODO: Add a name string for each roboclaw unit
+    state_interfaces.emplace_back("roboclaw", "battery_voltage", roboclaw.getMainVoltageStatePtr());
+    state_interfaces.emplace_back("roboclaw", "battery_percent", roboclaw.getMainVoltagePercentPtr());
+    state_interfaces.emplace_back("roboclaw", "temperature", roboclaw.getTempStatePtr());
   }
+
   return state_interfaces;
 }
 
@@ -116,12 +125,12 @@ RoboClawConfiguration RoboClawHardwareInterface::parse_roboclaw_configuration(
               ". Only velocity command interfaces are supported.");
     }
 
-    // We currently only support position state interfaces
-    if (joint.state_interfaces.size() != 1 || joint.state_interfaces[0].name != "position") {
-      throw std::runtime_error(
-              "Invalid state interface for " + joint.name +
-              ". Only position state interfaces are supported.");
-    }
+    // // // We currently only support position state interfaces
+    // if (joint.state_interfaces.size() != 1 || joint.state_interfaces[0].name != "position") {
+    //   throw std::runtime_error(
+    //           "Invalid state interface for " + joint.name +
+    //           ". Only position state interfaces are supported.");
+    // }
 
     // Capture and validate parameters
     uint8_t roboclaw_address;
@@ -172,9 +181,15 @@ RoboClawConfiguration RoboClawHardwareInterface::parse_roboclaw_configuration(
 
     // Ensure that this motor has not already been configured
     if (!roboclaw_config[roboclaw_address][motor_type]) {
-      // Set configuration parameters for this motor
+      // Get motor constant if it exists, and set to 1 otherwise
+      double motor_constant = 1.0;
+      auto it = joint.parameters.find("motor_constant");
+      if (it != joint.parameters.end())
+      {
+        motor_constant = stod(it->second);
+      }
       roboclaw_config[roboclaw_address][motor_type] =
-        std::make_shared<MotorJoint>(joint.name, qppr);
+        std::make_shared<MotorJoint>(joint.name, qppr, motor_constant);
     } else {
       throw std::runtime_error(
               "Bad motor type " + motor_type + " specified for joint " + joint.name);

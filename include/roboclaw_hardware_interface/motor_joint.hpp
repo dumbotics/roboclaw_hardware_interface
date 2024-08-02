@@ -29,11 +29,17 @@ private:
   // The radians of rotation per tick
   const double ticks_per_radian_;
 
+  // Motor constant used for computing effort from current
+  const double motor_constant_;
+
   // Desired velocity of the wheel in radians per second
   double velocity_command_ = 0;
 
   // Position of the wheel in radians
   double position_state_ = 0;
+
+  // Wheel effort/torque (N*m)
+  double effort_ = 0;
 
   // Store the prior encoder count for updating position state
   int32_t prior_encoder_count_;
@@ -46,7 +52,7 @@ public:
   const std::string name;
 
   // Constructor
-  MotorJoint(const std::string joint_name, const int32_t qppr);
+  MotorJoint(const std::string joint_name, const int32_t qppr, const double motor_constant);
 
   // Return the tick rate required to execute the current velocity command
   int32_t getTickRateCommand() const;
@@ -54,8 +60,12 @@ public:
   // Set the position given the current wheel encoder count
   void setPositionState(const int32_t & encoder_count);
 
+  // Set the effort given the current in 10mA increments
+  void setEffortState(const int16_t & current);
+
   // Accessor methods to enable ros2_control to access joint interface pointers
   inline double * getPositionStatePtr() {return &position_state_;}
+  inline double * getEffortStatePtr() {return &effort_;}
   inline double * getVelocityCommandPtr() {return &velocity_command_;}
 };
 }  // namespace roboclaw_hardware_interface
